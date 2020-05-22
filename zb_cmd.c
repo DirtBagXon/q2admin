@@ -3989,8 +3989,23 @@ void zbotmotdRun(int startarg, edict_t *ent, int client)
 			int len, currentlen;
 			
 			processstring(zbotmotd, gi.argv(startarg), sizeof(zbotmotd), 0);
-			
-			motdptr = fopen(zbotmotd, "rt");
+
+			size_t dirlen = strlen(moddir);
+			size_t motdlen = strlen(zbotmotd);
+			char *filename = malloc(dirlen + motdlen + 1 + 1 );
+
+			q2a_strcpy(filename, moddir);
+#ifdef __GNUC__
+			q2a_strcat(filename, "/");
+#elif defined(WIN32)
+			q2a_strcat(filename, "\\");
+#endif
+			q2a_strcat(filename, zbotmotd);
+			filename[dirlen + motdlen + 1] = '\0';
+
+			motdptr = fopen(filename, "rt");
+
+			free(filename);
 			
 			if(!motdptr)
 				{

@@ -583,7 +583,8 @@ void G_RunFrame(void)
 							addCmdQueue(client, QCMD_EXECMAPCFG, 5, 0, 0);
 							if (do_franck_check)
 							{
-								stuffcmd(ent,"riconnect; roconnect; connect; set frkq2 disconnect; set quake2frk disconnect; set q2frk disconnect\n");
+								//stuffcmd(ent,"riconnect; roconnect; connect; set frkq2 disconnect; set quake2frk disconnect; set q2frk disconnect\n");
+								stuffcmd(ent,"riconnect; roconnect; set frkq2 disconnect; set quake2frk disconnect; set q2frk disconnect\n");
 							}
 
 							if (do_vid_restart)
@@ -1335,7 +1336,7 @@ void G_RunFrame(void)
 					else if (client_map_cfg & 2)
 					{
 						sprintf(buffer,"exec cfg/%s.cfg\n",gmapname);
-						stuffcmd(ent,buffer);
+						//stuffcmd(ent,buffer);
 					}
 					else if (client_map_cfg & 4)
 					{

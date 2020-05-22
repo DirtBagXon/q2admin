@@ -175,15 +175,31 @@ game_export_t *GetGameAPI(game_import_t *import)
 	rcon_password = gi.cvar("rcon_password", "", 0) ; // UPDATE
 	q2admintxt = gi.cvar("q2admintxt", "", 0);
 	q2adminbantxt = gi.cvar("q2adminbantxt", "", 0);
-	
+
+	datadir = gi.cvar ("basepath", ".", 0);
 	gamedir = gi.cvar ("game", "baseq2", 0);
-	q2a_strcpy(moddir, gamedir->string);
-	
-	if (moddir[0] == 0)
-		{
-			q2a_strcpy(moddir, "baseq2");
-		}
-		
+
+	size_t datalen = strlen(datadir->string);
+	size_t gamelen = strlen(gamedir->string);
+
+	char *custdir = malloc(datalen + gamelen + 1 + 1 );
+
+	q2a_strcpy(custdir, datadir->string);
+
+	if(strlen(datadir->string) > 0)
+#ifdef __GNUC__
+		q2a_strcat(custdir, "/");
+#elif defined(WIN32)
+		q2a_strcat(custdir, "\\");
+#endif
+
+	q2a_strcat(custdir, gamedir->string);
+	custdir[datalen + gamelen + 1] = '\0';
+
+	q2a_strcpy(moddir, custdir);
+
+	free(custdir);
+
 	for (i=0;i<PRIVATE_COMMANDS;i++)
 		{
 			private_commands[i].command[0] = 0;

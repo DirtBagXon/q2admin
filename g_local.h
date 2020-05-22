@@ -817,7 +817,7 @@ typedef struct
 extern game_import_t gi;
 extern game_export_t globals;
 extern game_export_t *dllglobals;
-extern cvar_t   *rcon_password, *gamedir, *maxclients, *logfile, *rconpassword, *port, *q2admintxt, *q2adminbantxt; // UPDATE
+extern cvar_t   *rcon_password, *datadir, *gamedir, *maxclients, *logfile, *rconpassword, *port, *q2admintxt, *q2adminbantxt; // UPDATE
 
 extern char    dllname[256];
 extern char    zbotuserdisplay[256];

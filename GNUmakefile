@@ -19,7 +19,8 @@ CC = gcc -std=c99 -Wall
 
 cc = gcc
 
-CFLAGS =-O2 -fPIC -DARCH="$(ARCH)" -DLINUX -DSTDC_HEADERS -I/usr/include
+CFLAGS =-O2 -fPIC -DARCH="$(ARCH)" -DLINUX -DSTDC_HEADERS -I/usr/include -Wno-stringop-truncation -Wno-format-overflow \
+	-Wno-format-truncation -Wno-stringop-overflow
 LDFLAGS = -ldl -lm -shared
 
 ifeq ($(ARCH),i386)

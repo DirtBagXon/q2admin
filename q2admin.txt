@@ -32,8 +32,10 @@ zbotdetect  "Yes"
 ; For the console versions of the command, if you don't supply
 ; a filename, the MOTD is cleared. If you do the MOTD is loaded.
 ; NOTE: by default the MOTD is read from the quake2 directory.
-; If you want to use a mod motd you must supply the directory 
-; name. e.g. sv !setmotd "ctf/mymotd.txt"
+; If you supply the +set basepath and +set game arguments it will
+; be read from the full mod directory path.
+; Console server command:
+;  e.g. sv !setmotd "mymotd.txt"
 ;
 setmotd ""
 

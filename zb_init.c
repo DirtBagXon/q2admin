@@ -32,7 +32,7 @@ game_import_t  gi;
 game_export_t  globals;
 game_export_t  *dllglobals;
 
-cvar_t  *rcon_password, *gamedir, *maxclients, *logfile, *rconpassword, *port, *q2admintxt, *q2adminbantxt;	// UPDATE
+cvar_t  *rcon_password, *datadir, *gamedir, *maxclients, *logfile, *rconpassword, *port, *q2admintxt, *q2adminbantxt;	// UPDATE
 
 qboolean quake2dirsupport = TRUE;
 
@@ -208,6 +208,22 @@ char lockoutmsg[256];
 
 char  com_token[MAX_TOKEN_CHARS];
 
+// Remove character
+void remchar(char *s, char chr)
+{
+	int i, j = 0;
+
+	for ( i = 0; s[i] != '\0'; i++ )
+	{
+		if ( s[i] != chr )
+		{
+			s[j++] = s[i];
+		}
+	}
+	s[j] = '\0';
+}
+
+
 /*
 ==============
 COM_Parse
@@ -313,6 +329,7 @@ skipwhite:
 char * FindIpAddressInUserInfo(char * userinfo, qboolean* userInfoOverflow)
 {
 	char *ip = Info_ValueForKey(userinfo, "ip");
+	const char br = '[';
 	
 	if ( userInfoOverflow )
 		{
@@ -343,6 +360,12 @@ char * FindIpAddressInUserInfo(char * userinfo, qboolean* userInfoOverflow)
 					return ipuserinfo + 1;
 				}
 		}
+
+
+	if(strchr(ip, br)) {
+		remchar(ip, '[');
+		remchar(ip, ']');
+	}
 		
 	return ip;
 }
@@ -565,7 +588,22 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	motd[0] = 0;
 	if(zbotmotd[0])
 		{
-			motdptr = fopen(zbotmotd, "rt");
+			size_t dirlen = strlen(moddir);
+			size_t motdlen = strlen(zbotmotd);
+			char *filename = malloc(dirlen + motdlen + 1 + 1 );
+
+			q2a_strcpy(filename, moddir);
+#ifdef __GNUC__
+			q2a_strcat(filename, "/");
+#elif defined(WIN32)
+			q2a_strcat(filename, "\\");
+#endif
+			q2a_strcat(filename, zbotmotd);
+			filename[dirlen + motdlen + 1] = '\0';
+
+			motdptr = fopen(filename, "rt");
+
+			free(filename);
 			
 			if(!motdptr)
 				{
@@ -689,7 +727,6 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 }
 
 
-
 qboolean UpdateInternalClientInfo(int client, edict_t *ent, char *userinfo, qboolean* userInfoOverflow)
 {
 	char *ip = FindIpAddressInUserInfo(userinfo, userInfoOverflow);
@@ -698,7 +735,7 @@ qboolean UpdateInternalClientInfo(int client, edict_t *ent, char *userinfo, qboo
 		{
 			unsigned int i;
 			int num;
-			
+
 			q2a_strcpy(proxyinfo[client].ipaddress, ip);
 			
 			if ( q2a_strcmp (ip, "loopback") == 0 )
@@ -2015,11 +2052,12 @@ void ClientBegin (edict_t *ent)
 				{
 					gi.cprintf(ent, PRINT_HIGH, "WARNING: Your userinfo looks to have overflowed. This may cause you problems during gameplay. Restart quake2 to clear your userinfo space.\n");
 				}
-				
-			if(zbotmotd[0])
-				{
-					gi.centerprintf(ent, motd);
-				}
+
+			// Now run in G_RunFrame() via QCMD_SHOWMOTD
+			//if(zbotmotd[0])
+			//	{
+			//		gi.centerprintf(ent, motd);
+			//	}
 				
 			addCmdQueue(client, QCMD_CHECKVARTESTS, (float)checkvar_poll_time, 0, 0);
 			

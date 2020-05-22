@@ -5,6 +5,11 @@ This is Q2Admin with R1CH's security patches applied, and a couple tweaks
 to prevent kicking of players for false positives (Q2Admin would think a
 player was a bot when they were merely lagging badly.)
 
+Usage:
+
+/usr/lib/yamagi-quake2/q2ded -datadir /usr/share/games/quake2/ +set basepath /usr/share/games/quake2/ +set game gamedir <opts>
+
+
 Original Q2Admin readme.txt follows:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1761,10 +1766,12 @@ Where Allowed:  q2admin.txt, client console, server console.
   level changed as well) 
   For the console versions of the command, if you don't supply
   a filename, the MOTD is cleared. If you do the MOTD is loaded.
-  NOTE: by default the MOTD is read from the Quake2 directory.
-  If you want to use a mod motd you must supply the directory 
-  name. e.g. sv !setmotd "ctf/mymotd.txt"
-  Also a any qauke2 client connected to the server may redisplay
+  NOTE: by default the MOTD is read from the baseq2 directory.
+  If you use a +set basepath and +set game arguments it will be
+  read from the full path of the mod directory defined therein.
+  Set via console server config as:
+  e.g. sv !setmotd "mymotd.txt"
+  Also a any quake2 client connected to the server may redisplay
   the motd by typing 'motd' into the console.
 
 
@@ -3077,13 +3084,14 @@ much to it and is meant to do two things:
 1. Provide a simple MOTD features for mods that don't have a MOTD.
 2. Provide a global MOTD for admin's that want a global MOTD.
 
-The setmotd command is used to set name of the MOTD file.  This file is
-loaded from the Quake2 directory. If you wish to have a unique MOTD per 
-mod then I suggest you add a following line into you server startup 
-config and leave the setmotd in the q2admin.txt file blank.
+The setmotd command is used to set name of the MOTD file. This file is
+loaded from the directory defined by +basepath and +set game arguments.
+This allows you to have a unique MOTD per mod. Configure as setmotd
+in the mod q2admin.txt or via console.
 
-sv !setmotd "xxx\motd.txt"
-where xxx is the mod directory.
+sv !setmotd "motd.txt"
+
+Default PATH is ./baseq2/
 
 The MOTD file is reloaded with every level change.
 The MOTD file can be reloaded with the above command as well.
