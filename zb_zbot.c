@@ -1348,7 +1348,9 @@ void G_RunFrame(void)
 				{
 					if(zbotmotd[0])
 					{
-						gi.centerprintf(ent, motd);
+						char hitxt[256];
+						HighlightStr(hitxt, motd, sizeof(hitxt));
+						gi.centerprintf(ent, hitxt);
 					}
 				}
 //*** UPDATE END ***							

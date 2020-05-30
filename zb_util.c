@@ -92,6 +92,21 @@ void q2admin_free (char *mem)
 	gi.TagFree(mem - sizeof(int));
 }
 
+size_t HighlightStr(char *dst, const char *src, size_t size)
+{
+	size_t ret = strlen(src);
+
+	if (size) {
+		size_t i;
+		for (i = 0; i < min(ret, size - 1); i++)
+			if (!isalnum(src[i]))
+				dst[i] = src[i];
+			else
+				dst[i] = src[i] | 0x80;
+		dst[i] = 0;
+	}
+	return ret;
+}
 
 /*
 ===============

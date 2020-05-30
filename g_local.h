@@ -1316,6 +1316,8 @@ typedef struct
 #define Q2A_PRV_KICK_MSG "Failed the private commands check.\n"
 #define FRKQ2_KICK_MSG "Failed the client authentication.\n"
 
+#define        min(a,b) ((a)<(b)?(a):(b))
+
 extern admin_type admin_pass[MAX_ADMINS];
 extern admin_type q2a_bypass_pass[MAX_ADMINS];
 extern int num_admins;
